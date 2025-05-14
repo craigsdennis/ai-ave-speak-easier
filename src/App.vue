@@ -25,9 +25,7 @@ import { RouterView } from 'vue-router'
         <a href="https://workers.cloudflare.com/" target="_blank" rel="noopener">Cloudflare Workers</a> &amp;&amp; 
         <a href="https://elevenlabs.io/" target="_blank" rel="noopener">ElevenLabs</a> &amp;&amp; 
         <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue</a>
-      </div>
-      <div class="footer-code">
-        <a href="https://github.com/cloudflare/ai-avenue" target="_blank" rel="noopener">👀 the code</a>
+        &mdash; <a href="https://github.com/cloudflare/ai-avenue" target="_blank" rel="noopener">👀 the code</a>
       </div>
     </footer>
   </div>
@@ -145,12 +143,12 @@ footer a:hover {
 }
 
 .footer-text {
-  margin-bottom: 0.8rem;
-}
-
-.footer-code {
-  font-weight: 500;
-  font-size: 1.1rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 button {

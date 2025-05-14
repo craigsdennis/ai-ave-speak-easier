@@ -17,6 +17,8 @@ const translationId = ref('');
 const translationStatus = ref('');
 const expectedDuration = ref(0);
 const pollingInterval = ref<number | null>(null);
+const countdownInterval = ref<number | null>(null);
+const remainingSeconds = ref(0);
 const sourceLanguage = ref('en');
 const targetLanguage = ref('es');
 const sourceAudioUrl = ref('');
@@ -73,6 +75,22 @@ const sourceLanguageName = computed(() => {
 
 const targetLanguageName = computed(() => {
   return languageOptions.find(lang => lang.code === targetLanguage.value)?.name || '';
+});
+
+const estimatedCompletionMinutes = computed(() => {
+  return Math.ceil(expectedDuration.value / 60);
+});
+
+const formattedRemainingTime = computed(() => {
+  const minutes = Math.floor(remainingSeconds.value / 60);
+  
+  if (minutes > 1) {
+    return `About ${minutes} minutes`;
+  } else if (minutes === 1) {
+    return `About 1 minute`;
+  } else {
+    return `Less than a minute`;
+  }
 });
 
 // Watch for language changes and reset state
@@ -152,8 +170,12 @@ async function uploadAndTranslate() {
     const data = await response.json();
     translationId.value = data.dubbing_id;
     expectedDuration.value = data.expected_duration_sec || 10;
+    remainingSeconds.value = expectedDuration.value;
     recordingStatus.value = 'Uploaded successfully';
-    translationStatus.value = 'Translation in progress...';
+    translationStatus.value = `Translation in progress... (${formattedRemainingTime.value} remaining)`;
+    
+    // Start countdown timer
+    startCountdownTimer();
     
     // Start polling after expected duration
     setTimeout(() => {
@@ -173,6 +195,23 @@ function startPolling() {
   pollingInterval.value = window.setInterval(checkTranslationStatus, 3000);
 }
 
+// Start countdown timer
+function startCountdownTimer() {
+  // Update the countdown every second
+  countdownInterval.value = window.setInterval(() => {
+    if (remainingSeconds.value > 0) {
+      remainingSeconds.value--;
+      translationStatus.value = `Translation in progress... (${formattedRemainingTime.value} remaining)`;
+    } else {
+      // Clear the interval when we reach zero
+      if (countdownInterval.value) {
+        clearInterval(countdownInterval.value);
+        countdownInterval.value = null;
+      }
+    }
+  }, 1000);
+}
+
 // Check translation status
 async function checkTranslationStatus() {
   if (!translationId.value) return;
@@ -187,10 +226,18 @@ async function checkTranslationStatus() {
     translationStatus.value = `Status: ${data.status}`;
     
     if (data.status === 'done' || data.status === 'dubbed') {
+      // Clear the polling interval
       if (pollingInterval.value) {
         clearInterval(pollingInterval.value);
         pollingInterval.value = null;
       }
+      
+      // Clear the countdown interval
+      if (countdownInterval.value) {
+        clearInterval(countdownInterval.value);
+        countdownInterval.value = null;
+      }
+      
       loadTranslatedAudio();
     }
   } catch (error) {
@@ -302,6 +349,13 @@ function resetRecordingState() {
     clearInterval(pollingInterval.value);
     pollingInterval.value = null;
   }
+  
+  // Clear countdown timer
+  if (countdownInterval.value) {
+    clearInterval(countdownInterval.value);
+    countdownInterval.value = null;
+  }
+  remainingSeconds.value = 0;
 }
 </script>
 
@@ -596,6 +650,11 @@ function resetRecordingState() {
   text-align: center;
   font-style: italic;
   color: #7f8c8d;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 audio {
