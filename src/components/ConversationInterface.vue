@@ -228,13 +228,16 @@ function getLanguageName(langCode: string): string {
 
 .conversation-container {
   border: 1px solid #eee;
-  border-radius: 8px;
-  padding: 20px;
-  height: 400px;
+  border-radius: 12px;
+  padding: 25px;
+  height: 450px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background-color: #fcfcfc;
+  margin-bottom: 20px;
 }
 
 .empty-state {
@@ -247,21 +250,28 @@ function getLanguageName(langCode: string): string {
 }
 
 .conversation-item {
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 80%;
+}
+
+.conversation-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
 }
 
 .conversation-item.left {
-  background-color: #f1f8ff;
+  background-color: #f0f7ff;
   align-self: flex-start;
-  margin-right: 15%;
+  border-left: 4px solid var(--primary-color);
 }
 
 .conversation-item.right {
   background-color: #f8f9fa;
   align-self: flex-end;
-  margin-left: 15%;
+  border-right: 4px solid var(--secondary-color);
 }
 
 .conversation-header {
@@ -274,9 +284,11 @@ function getLanguageName(langCode: string): string {
 .language-badge {
   background-color: #3498db;
   color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.8rem;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .timestamp {

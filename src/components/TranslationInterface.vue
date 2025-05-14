@@ -422,26 +422,38 @@ function resetRecordingState() {
 
 .translation-panels {
   display: flex;
-  gap: 20px;
-  height: auto; /* Changed from fixed height to auto */
+  gap: 25px;
+  height: auto; 
   min-height: 400px;
-  flex-direction: row; /* Explicit row for large screens */
+  flex-direction: row; 
+  margin-bottom: 30px;
 }
 
 .panel {
   flex: 1;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 25px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background-color: white;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.panel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .panel h2 {
   text-align: center;
   margin-top: 0;
   padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 2px solid #eee;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
 }
 
 .panel-content {
@@ -469,7 +481,7 @@ function resetRecordingState() {
 }
 
 .record-btn {
-  padding: 15px 30px;
+  padding: 15px 32px;
   border-radius: 50px;
   border: none;
   background-color: #3498db;
@@ -477,6 +489,9 @@ function resetRecordingState() {
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+  font-size: 1rem;
+  letter-spacing: 0.5px;
 }
 
 .record-btn.recording {
@@ -526,13 +541,22 @@ function resetRecordingState() {
 }
 
 .translate-btn {
-  padding: 10px 20px;
-  border-radius: 4px;
+  padding: 12px 24px;
+  border-radius: 8px;
   border: none;
   background-color: #2ecc71;
   color: white;
   font-weight: bold;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+  transition: all 0.3s;
+}
+
+.translate-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(46, 204, 113, 0.5);
 }
 
 .translate-btn:disabled {
@@ -541,14 +565,31 @@ function resetRecordingState() {
 }
 
 .download-btn {
-  padding: 10px 20px;
-  border-radius: 4px;
+  padding: 12px 24px;
+  border-radius: 8px;
   border: none;
   background-color: #3498db;
   color: white;
   font-weight: bold;
   cursor: pointer;
   margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+  font-size: 0.95rem;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(52, 152, 219, 0.5);
+}
+
+.download-btn:before {
+  content: "⬇️";
+  font-size: 1.1rem;
 }
 
 .status, .translation-status {

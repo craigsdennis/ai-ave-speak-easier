@@ -6,11 +6,12 @@ import { RouterView } from 'vue-router'
   <div class="app-container">
     <header>
       <div class="logo-container">
-        <img src="@/assets/logo.svg" alt="Logo" class="logo" />
-        <h1 class="app-title">Conversational Dubbing</h1>
+        <span class="emoji-logo">🗣️</span>
+        <h1 class="app-title">Speak Easier</h1>
+        <span class="emoji-logo">🔊</span>
       </div>
       <div class="description">
-        Seamlessly translate your spoken words across languages
+        As seen on the hit show AI Avenue
       </div>
     </header>
 
@@ -63,6 +64,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 header {
@@ -80,20 +82,28 @@ header {
   margin-bottom: 0.5rem;
 }
 
-.logo {
-  width: 40px;
-  height: 40px;
+.emoji-logo {
+  font-size: 2.5rem;
+  line-height: 1;
+  filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.1));
 }
 
 .app-title {
-  font-size: 1.8rem;
+  font-size: 2.2rem;
   color: var(--primary-color);
   margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.05);
 }
 
 .description {
   color: #666;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  font-weight: 400;
+  max-width: 600px;
+  margin: 0 auto;
+  margin-top: 8px;
 }
 
 main {
@@ -107,6 +117,11 @@ footer {
   text-align: center;
   padding: 1.5rem;
   margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 
 footer a {
@@ -156,10 +171,19 @@ button:disabled {
   }
   
   .app-title {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
   
   .description {
+    font-size: 0.95rem;
+    padding: 0 15px;
+  }
+  
+  footer {
+    padding: 1.25rem 1rem;
+  }
+  
+  .footer-text {
     font-size: 0.9rem;
   }
 }
