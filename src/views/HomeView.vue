@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import TranslationInterface from '../components/TranslationInterface.vue'
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="home-container">
+    <TranslationInterface />
+  </div>
 </template>
+
+<style scoped>
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+</style>
