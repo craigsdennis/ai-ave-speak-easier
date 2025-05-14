@@ -58,4 +58,39 @@ app.get("/api/translations/:id/audio", async(c) => {
 	}
 })
 
+// Download endpoint specifically for handling MP3 downloads with proper headers
+app.get("/api/translations/:id/download", async(c) => {
+	const dubbingId = c.req.param("id");
+	const targetLang = c.req.query("target_lang") || "es";
+
+	try {
+		// Create the ElevenLabs client
+		const client = new ElevenLabsClient({ apiKey: c.env.ELEVENLABS_API_KEY });
+
+		// Get the audio stream from ElevenLabs
+		const audioStream = await client.dubbing.getDubbedFile(dubbingId, targetLang);
+		
+		// Set appropriate Content-Type and Content-Disposition headers for download
+		// Using audio/mp3 instead of audio/mpeg to be more specific
+		c.header('Content-Type', 'audio/mp3');
+		c.header('Content-Disposition', `attachment; filename="translated_audio_${targetLang}.mp3"`);
+		// Add cache control headers to prevent caching issues
+		c.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+		c.header('Pragma', 'no-cache');
+		c.header('Expires', '0');
+		
+		return stream(c, async(stream) => {
+			for await (const chunk of audioStream) {
+				stream.write(chunk);
+			}
+		});
+	} catch (error) {
+		console.error("Error downloading dubbed audio:", error);
+		return c.json({
+			status: "error",
+			message: error || "Failed to download audio translation",
+		}, 500);
+	}
+})
+
 export default app;

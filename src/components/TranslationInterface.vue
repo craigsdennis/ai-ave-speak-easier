@@ -16,16 +16,45 @@ const targetAudioUrl = ref('');
 const mediaRecorder = ref<MediaRecorder | null>(null);
 const recordedChunks = ref<BlobPart[]>([]);
 
-// Language options
+// Language options based on ElevenLabs supported languages
 const languageOptions = [
   { code: 'en', name: 'English' },
-  { code: 'es', name: 'Spanish' },
-  { code: 'fr', name: 'French' },
+  { code: 'ar', name: 'Arabic' },
+  { code: 'bg', name: 'Bulgarian' },
+  { code: 'ca', name: 'Catalan' },
+  { code: 'cs', name: 'Czech' },
+  { code: 'cy', name: 'Welsh' },
+  { code: 'da', name: 'Danish' },
   { code: 'de', name: 'German' },
+  { code: 'el', name: 'Greek' },
+  { code: 'es', name: 'Spanish' },
+  { code: 'et', name: 'Estonian' },
+  { code: 'fi', name: 'Finnish' },
+  { code: 'fr', name: 'French' },
+  { code: 'he', name: 'Hebrew' },
+  { code: 'hi', name: 'Hindi' },
+  { code: 'hu', name: 'Hungarian' },
+  { code: 'id', name: 'Indonesian' },
   { code: 'it', name: 'Italian' },
-  { code: 'tr', name: 'Turkish' },
   { code: 'ja', name: 'Japanese' },
   { code: 'ko', name: 'Korean' },
+  { code: 'lt', name: 'Lithuanian' },
+  { code: 'lv', name: 'Latvian' },
+  { code: 'ms', name: 'Malay' },
+  { code: 'nl', name: 'Dutch' },
+  { code: 'no', name: 'Norwegian' },
+  { code: 'pl', name: 'Polish' },
+  { code: 'pt', name: 'Portuguese' },
+  { code: 'ro', name: 'Romanian' },
+  { code: 'ru', name: 'Russian' },
+  { code: 'sk', name: 'Slovak' },
+  { code: 'sl', name: 'Slovenian' },
+  { code: 'sv', name: 'Swedish' },
+  { code: 'sw', name: 'Swahili' },
+  { code: 'th', name: 'Thai' },
+  { code: 'tr', name: 'Turkish' },
+  { code: 'uk', name: 'Ukrainian' },
+  { code: 'vi', name: 'Vietnamese' },
   { code: 'zh', name: 'Chinese' }
 ];
 
@@ -115,6 +144,7 @@ async function uploadAndTranslate() {
     const data = await response.json();
     translationId.value = data.dubbing_id;
     expectedDuration.value = data.expected_duration_sec || 10;
+    recordingStatus.value = 'Uploaded successfully';
     translationStatus.value = 'Translation in progress...';
     
     // Start polling after expected duration
@@ -148,7 +178,7 @@ async function checkTranslationStatus() {
     const data = await response.json();
     translationStatus.value = `Status: ${data.status}`;
     
-    if (data.status === 'done') {
+    if (data.status === 'done' || data.status === 'dubbed') {
       if (pollingInterval.value) {
         clearInterval(pollingInterval.value);
         pollingInterval.value = null;
@@ -169,9 +199,52 @@ async function loadTranslatedAudio() {
     // Create an audio URL from the streaming endpoint with target language
     targetAudioUrl.value = `/api/translations/${translationId.value}/audio?target_lang=${targetLanguage.value}`;
     translationStatus.value = 'Translation complete';
+    
+    // We'll let the template handle autoplay with the autoplay attribute
   } catch (error) {
     console.error('Error loading translated audio:', error);
     translationStatus.value = `Error: ${error}`;
+  }
+}
+
+// Download translated audio as MP3 file
+async function downloadTranslatedAudio() {
+  if (!translationId.value) return;
+  
+  try {
+    const downloadUrl = `/api/translations/${translationId.value}/download?target_lang=${targetLanguage.value}`;
+    
+    // Fetch the file first to ensure we're getting the proper content
+    const response = await fetch(downloadUrl);
+    if (!response.ok) {
+      throw new Error(`Server responded with ${response.status}`);
+    }
+    
+    // Get the blob from the response
+    const blob = await response.blob();
+    
+    // Create a blob URL for the audio file
+    const audioBlob = new Blob([blob], { type: 'audio/mp3' });
+    const audioUrl = URL.createObjectURL(audioBlob);
+    
+    // Create a temporary link element
+    const link = document.createElement('a');
+    link.href = audioUrl;
+    link.download = `translated_audio_${targetLanguage.value}.mp3`;
+    
+    // Append to body, click and remove
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Clean up the blob URL
+    setTimeout(() => {
+      URL.revokeObjectURL(audioUrl);
+    }, 100);
+    
+  } catch (error) {
+    console.error('Error downloading audio:', error);
+    translationStatus.value = `Download error: ${error}`;
   }
 }
 
@@ -275,7 +348,14 @@ function resetRecordingState() {
         <div class="panel-content">
           <div class="translation-status">{{ translationStatus }}</div>
           
-          <audio v-if="targetAudioUrl" :src="targetAudioUrl" controls></audio>
+          <audio v-if="targetAudioUrl" :src="targetAudioUrl" controls autoplay></audio>
+          
+          <button 
+            v-if="targetAudioUrl" 
+            class="download-btn"
+            @click="downloadTranslatedAudio">
+            Download Audio
+          </button>
         </div>
       </div>
     </div>
@@ -436,6 +516,17 @@ function resetRecordingState() {
   cursor: not-allowed;
 }
 
+.download-btn {
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: none;
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
 .status, .translation-status {
   text-align: center;
   font-style: italic;
@@ -445,4 +536,5 @@ function resetRecordingState() {
 audio {
   width: 100%;
 }
+
 </style>

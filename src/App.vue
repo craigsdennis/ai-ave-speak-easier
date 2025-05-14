@@ -19,7 +19,15 @@ import { RouterView } from 'vue-router'
     </main>
 
     <footer>
-      <p>Powered by ElevenLabs Dubbing API</p>
+      <div class="footer-text">
+        Built with 🧡 using 
+        <a href="https://workers.cloudflare.com/" target="_blank" rel="noopener">Cloudflare Workers</a> &amp;&amp; 
+        <a href="https://elevenlabs.io/" target="_blank" rel="noopener">ElevenLabs</a> &amp;&amp; 
+        <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue</a>
+      </div>
+      <div class="footer-code">
+        <a href="https://github.com/cloudflare/ai-avenue" target="_blank" rel="noopener">👀 the code</a>
+      </div>
     </footer>
   </div>
 </template>
@@ -97,8 +105,29 @@ footer {
   background-color: var(--dark-color);
   color: var(--light-color);
   text-align: center;
-  padding: 1rem;
+  padding: 1.5rem;
   margin-top: auto;
+}
+
+footer a {
+  color: var(--light-color);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--light-color);
+  transition: var(--transition);
+}
+
+footer a:hover {
+  color: #3498db;
+  border-bottom-color: #3498db;
+}
+
+.footer-text {
+  margin-bottom: 0.8rem;
+}
+
+.footer-code {
+  font-weight: 500;
+  font-size: 1.1rem;
 }
 
 button {
