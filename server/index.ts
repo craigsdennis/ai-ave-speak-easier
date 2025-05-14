@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { stream } from 'hono/streaming';
 import { ElevenLabsClient } from "elevenlabs";
+import { DubbingGetTranscriptForDubRequestFormatType } from 'elevenlabs/api';
 
 
 const app = new Hono<{ Bindings: Env }>();
@@ -99,7 +100,6 @@ app.get("/api/translations/:id/transcript", async(c) => {
 	const language = c.req.query("language") || "target"; // 'source' or 'target'
 	const targetLang = c.req.query("target_lang") || "es";
 	const sourceLang = c.req.query("source_lang") || "en";
-	const formatType = c.req.query("format") || "srt"; // 'srt' or 'webvtt'
 	
 	try {
 		// Create the ElevenLabs client
@@ -109,7 +109,7 @@ app.get("/api/translations/:id/transcript", async(c) => {
 		const langCode = language === "source" ? sourceLang : targetLang;
 		
 		// Get the transcript from ElevenLabs using the client method
-		const transcript = await client.dubbing.getTranscriptForDub(dubbingId, langCode, formatType as "srt" | "webvtt");
+		const transcript = await client.dubbing.getTranscriptForDub(dubbingId, langCode);
 		
 		// Return the transcript text
 		c.header('Content-Type', 'text/plain');
@@ -118,7 +118,7 @@ app.get("/api/translations/:id/transcript", async(c) => {
 		console.error("Error fetching transcript:", error);
 		return c.json({
 			status: "error",
-			message: error.message || "Failed to fetch transcript",
+			message: error || "Failed to fetch transcript",
 		}, 500);
 	}
 })

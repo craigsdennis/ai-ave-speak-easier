@@ -11,7 +11,7 @@ import { RouterView } from 'vue-router'
         <span class="emoji-logo">🔊</span>
       </div>
       <div class="description">
-        As seen on the hit show AI Avenue
+        <span class="tv-icon">📺</span> As seen on the hit show AI Avenue <span class="tv-icon">📺</span>
       </div>
     </header>
 
@@ -104,6 +104,14 @@ header {
   max-width: 600px;
   margin: 0 auto;
   margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.tv-icon {
+  font-size: 1.3rem;
 }
 
 main {
@@ -180,11 +188,7 @@ button:disabled {
   }
   
   footer {
-    padding: 1.25rem 1rem;
-  }
-  
-  .footer-text {
-    font-size: 0.9rem;
+    display: none;
   }
 }
 </style>
