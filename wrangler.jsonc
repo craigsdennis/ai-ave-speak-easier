@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "conversational-dub",
+	"name": "speak-easier",
 	"compatibility_date": "2025-05-10",
 	"compatibility_flags": ["nodejs_compat"],
 	"main": "server/index.ts",

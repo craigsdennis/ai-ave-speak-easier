@@ -2,6 +2,48 @@
 import { ref, onMounted, watch } from 'vue';
 import TranslationInterface from './TranslationInterface.vue';
 
+// Language mapping from codes to full names
+const languageMap = {
+  en: 'English',
+  ar: 'Arabic',
+  bg: 'Bulgarian',
+  ca: 'Catalan',
+  cs: 'Czech',
+  cy: 'Welsh',
+  da: 'Danish',
+  de: 'German',
+  el: 'Greek',
+  es: 'Spanish',
+  et: 'Estonian',
+  fi: 'Finnish',
+  fr: 'French',
+  he: 'Hebrew',
+  hi: 'Hindi',
+  hu: 'Hungarian',
+  id: 'Indonesian',
+  it: 'Italian',
+  ja: 'Japanese',
+  ko: 'Korean',
+  lt: 'Lithuanian',
+  lv: 'Latvian',
+  ms: 'Malay',
+  nl: 'Dutch',
+  no: 'Norwegian',
+  pl: 'Polish',
+  pt: 'Portuguese',
+  ro: 'Romanian',
+  ru: 'Russian',
+  sk: 'Slovak',
+  sl: 'Slovenian',
+  sv: 'Swedish',
+  sw: 'Swahili',
+  th: 'Thai',
+  tr: 'Turkish',
+  uk: 'Ukrainian',
+  vi: 'Vietnamese',
+  zh: 'Chinese'
+};
+
 // State for conversation history
 const conversations = ref<Array<{
   id: string;
@@ -11,6 +53,8 @@ const conversations = ref<Array<{
   targetAudioUrl: string;
   translationId: string;
   timestamp: Date;
+  sourceTranscript?: string;
+  targetTranscript?: string;
 }>>([]);
 
 // Scroll container reference
@@ -24,7 +68,7 @@ const currentTargetLang = ref('es');
 const translationInterface = ref<InstanceType<typeof TranslationInterface> | null>(null);
 
 // Function to add a new translation to the conversation
-function addTranslation(translation: {
+async function addTranslation(translation: {
   id: string;
   sourceLanguage: string;
   targetLanguage: string;
@@ -32,11 +76,13 @@ function addTranslation(translation: {
   targetAudioUrl: string;
   translationId: string;
 }) {
+  // Create a new conversation object with timestamp
   const newConversation = {
     ...translation,
     timestamp: new Date()
   };
   
+  // Add to conversations before fetching transcripts to show content immediately
   conversations.value.push(newConversation);
   
   // Update current languages
@@ -46,9 +92,26 @@ function addTranslation(translation: {
   // Scroll to bottom after adding new conversation
   setTimeout(() => {
     scrollToBottom();
-    
-    // We'll handle the auto-switch in the template with an event listener on the audio element
   }, 100);
+  
+  // Fetch target transcript in the background
+  try {
+    // Only fetch target transcript since source transcript may not be available
+    const targetResponse = await fetch(
+      `/api/translations/${translation.translationId}/transcript?language=target&target_lang=${translation.targetLanguage}&format=srt`
+    );
+    
+    if (targetResponse.ok) {
+      const targetTranscript = await targetResponse.text();
+      // Find the conversation and update it with target transcript
+      const convo = conversations.value.find(c => c.id === translation.id);
+      if (convo) {
+        convo.targetTranscript = targetTranscript;
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching transcript:", error);
+  }
 }
 
 // Function to scroll the conversation container to the bottom
@@ -63,6 +126,45 @@ function scrollToBottom() {
 onMounted(() => {
   scrollToBottom();
 });
+
+// Format SRT transcript for display
+function formatTranscript(srtContent: string): string {
+  if (!srtContent) return '';
+  
+  // Extract only the text content from SRT format
+  // SRT format: sequence number, timestamp, text content, blank line
+  const lines = srtContent.split('\n');
+  const textLines: string[] = [];
+  
+  // Skip sequence numbers and timestamps, keep text content
+  for (let i = 0; i < lines.length; i++) {
+    // Skip sequence numbers
+    if (/^\d+$/.test(lines[i].trim())) {
+      continue;
+    }
+    
+    // Skip timestamp lines (contain --> format)
+    if (lines[i].includes('-->')) {
+      continue;
+    }
+    
+    // Skip empty lines
+    if (lines[i].trim() === '') {
+      continue;
+    }
+    
+    // Keep actual text content
+    textLines.push(lines[i].trim());
+  }
+  
+  // Join text lines with spaces to form a coherent paragraph
+  return textLines.join(' ');
+}
+
+// Get language full name from language code
+function getLanguageName(langCode: string): string {
+  return languageMap[langCode as keyof typeof languageMap] || langCode;
+}
 </script>
 
 <template>
@@ -80,7 +182,7 @@ onMounted(() => {
       <div v-for="(item, index) in conversations" :key="item.id" :class="['conversation-item', index % 2 === 0 ? 'left' : 'right']">
         <div class="conversation-header">
           <div class="language-badge">
-            {{ item.sourceLanguage }} → {{ item.targetLanguage }}
+            {{ getLanguageName(item.sourceLanguage) }} → {{ getLanguageName(item.targetLanguage) }}
           </div>
           <div class="timestamp">
             {{ new Date(item.timestamp).toLocaleTimeString() }}
@@ -99,6 +201,13 @@ onMounted(() => {
               :src="item.targetAudioUrl" 
               controls
             ></audio>
+          </div>
+        </div>
+        
+        <div v-if="item.targetTranscript" class="transcript-container">
+          <div class="transcript target-transcript">
+            <div class="transcript-header">Transcript</div>
+            <div class="transcript-content">{{ formatTranscript(item.targetTranscript) }}</div>
           </div>
         </div>
       </div>
@@ -197,6 +306,38 @@ audio {
   width: 100%;
 }
 
+.transcript-container {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.transcript {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  padding: 10px;
+  border-left: 3px solid #3498db;
+}
+
+.target-transcript {
+  border-left-color: #2ecc71;
+}
+
+.transcript-header {
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.transcript-content {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: #333;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .conversation-item.left,
@@ -208,6 +349,10 @@ audio {
   
   .conversation-container {
     height: 350px;
+  }
+  
+  .transcript-container {
+    margin-top: 10px;
   }
 }
 </style>

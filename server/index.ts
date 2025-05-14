@@ -93,4 +93,34 @@ app.get("/api/translations/:id/download", async(c) => {
 	}
 })
 
+// Get transcript for dubbed audio
+app.get("/api/translations/:id/transcript", async(c) => {
+	const dubbingId = c.req.param("id");
+	const language = c.req.query("language") || "target"; // 'source' or 'target'
+	const targetLang = c.req.query("target_lang") || "es";
+	const sourceLang = c.req.query("source_lang") || "en";
+	const formatType = c.req.query("format") || "srt"; // 'srt' or 'webvtt'
+	
+	try {
+		// Create the ElevenLabs client
+		const client = new ElevenLabsClient({ apiKey: c.env.ELEVENLABS_API_KEY });
+		
+		// Determine which language code to use
+		const langCode = language === "source" ? sourceLang : targetLang;
+		
+		// Get the transcript from ElevenLabs using the client method
+		const transcript = await client.dubbing.getTranscriptForDub(dubbingId, langCode, formatType as "srt" | "webvtt");
+		
+		// Return the transcript text
+		c.header('Content-Type', 'text/plain');
+		return c.body(transcript);
+	} catch (error) {
+		console.error("Error fetching transcript:", error);
+		return c.json({
+			status: "error",
+			message: error.message || "Failed to fetch transcript",
+		}, 500);
+	}
+})
+
 export default app;
