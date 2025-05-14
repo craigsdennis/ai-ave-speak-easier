@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 
+// Define component emits
+const emit = defineEmits(['translation-complete']);
+
+// Define exposed functions
+defineExpose({
+  swapLanguages
+});
+
 // State management
 const audioBlob = ref<Blob | null>(null);
 const isRecording = ref(false);
@@ -200,6 +208,16 @@ async function loadTranslatedAudio() {
     targetAudioUrl.value = `/api/translations/${translationId.value}/audio?target_lang=${targetLanguage.value}`;
     translationStatus.value = 'Translation complete';
     
+    // Emit event with translation data for conversation history
+    emit('translation-complete', {
+      id: Date.now().toString(),
+      sourceLanguage: sourceLanguage.value,
+      targetLanguage: targetLanguage.value,
+      sourceAudioUrl: sourceAudioUrl.value,
+      targetAudioUrl: targetAudioUrl.value,
+      translationId: translationId.value
+    });
+    
     // We'll let the template handle autoplay with the autoplay attribute
   } catch (error) {
     console.error('Error loading translated audio:', error);
@@ -257,6 +275,8 @@ function swapLanguages() {
   const temp = sourceLanguage.value;
   sourceLanguage.value = targetLanguage.value;
   targetLanguage.value = temp;
+  
+  return { sourceLanguage: sourceLanguage.value, targetLanguage: targetLanguage.value };
 }
 
 // Reset recording and translation state
@@ -369,6 +389,7 @@ function resetRecordingState() {
   max-width: 1200px;
   margin: 0 auto;
   gap: 20px;
+  width: 100%;
 }
 
 .language-controls {
@@ -377,6 +398,7 @@ function resetRecordingState() {
   align-items: center;
   gap: 20px;
   margin-bottom: 20px;
+  flex-wrap: wrap; /* Allows wrapping on small screens */
 }
 
 .language-selector {
@@ -401,7 +423,9 @@ function resetRecordingState() {
 .translation-panels {
   display: flex;
   gap: 20px;
-  height: 500px;
+  height: auto; /* Changed from fixed height to auto */
+  min-height: 400px;
+  flex-direction: row; /* Explicit row for large screens */
 }
 
 .panel {
@@ -535,6 +559,21 @@ function resetRecordingState() {
 
 audio {
   width: 100%;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .translation-panels {
+    flex-direction: column;
+  }
+  
+  .panel {
+    width: 100%;
+  }
+  
+  .language-controls {
+    padding: 0 10px;
+  }
 }
 
 </style>
