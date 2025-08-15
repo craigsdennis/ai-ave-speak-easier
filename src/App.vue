@@ -3,190 +3,35 @@ import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <div class="app-container">
-    <header>
-      <div class="logo-container">
-        <span class="emoji-logo">🗣️</span>
-        <h1 class="app-title">Speak Easier</h1>
-        <span class="emoji-logo">🔊</span>
+  <div class="min-h-screen flex flex-col bg-pure-white">
+    <header class="bg-pure-white shadow-lg p-6 text-center">
+      <div class="flex items-center justify-center gap-4 mb-2">
+        <span class="text-4xl drop-shadow-sm">🗣️</span>
+        <h1 class="text-4xl font-semibold text-bright-blue -tracking-wider">Speak Easier</h1>
+        <span class="text-4xl drop-shadow-sm">🔊</span>
       </div>
-      <div class="description">
-        <span class="tv-icon">📺</span> As seen on the hit show AI Avenue <span class="tv-icon">📺</span>
+      <div class="text-medium-purple text-lg font-normal max-w-2xl mx-auto mt-2 flex items-center justify-center flex-wrap gap-2">
+        <span class="text-xl">📺</span> As seen on the hit show AI Avenue <span class="text-xl">📺</span>
       </div>
     </header>
 
-    <main>
+    <main class="flex-1 p-8">
       <RouterView />
     </main>
 
-    <footer>
-      <div class="footer-text">
-        Built with 🧡 using 
-        <a href="https://workers.cloudflare.com/" target="_blank" rel="noopener">Cloudflare Workers</a> &amp;&amp; 
-        <a href="https://elevenlabs.io/" target="_blank" rel="noopener">ElevenLabs</a> &amp;&amp; 
-        <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue</a>
-        &mdash; <a href="https://github.com/cloudflare/ai-avenue" target="_blank" rel="noopener">👀 the code</a>
+    <footer class="bg-deep-purple text-off-white text-center p-6 sticky bottom-0 w-full z-10 shadow-2xl">
+      <div class="flex flex-col items-center justify-center gap-2">
+        <div class="flex items-center justify-center flex-wrap gap-2">
+          Built with 🧡 using 
+          <a href="https://workers.cloudflare.com/" target="_blank" rel="noopener" class="text-off-white border-b border-dotted border-off-white hover:text-bright-blue hover:border-bright-blue transition-colors">Cloudflare Workers</a> &amp;&amp; 
+          <a href="https://elevenlabs.io/" target="_blank" rel="noopener" class="text-off-white border-b border-dotted border-off-white hover:text-bright-blue hover:border-bright-blue transition-colors">ElevenLabs</a> &amp;&amp; 
+          <a href="https://vuejs.org/" target="_blank" rel="noopener" class="text-off-white border-b border-dotted border-off-white hover:text-bright-blue hover:border-bright-blue transition-colors">Vue</a>
+        </div>
+        <div class="flex items-center justify-center flex-wrap gap-2">
+          <a href="https://github.com/cloudflare/ai-avenue" target="_blank" rel="noopener" class="text-off-white border-b border-dotted border-off-white hover:text-bright-blue hover:border-bright-blue transition-colors">👀 the code</a>
+        </div>
       </div>
     </footer>
   </div>
 </template>
 
-<style>
-:root {
-  --primary-color: #3498db;
-  --secondary-color: #2ecc71;
-  --dark-color: #2c3e50;
-  --light-color: #ecf0f1;
-  --accent-color: #e74c3c;
-  --background-color: #f9f9f9;
-  --card-background: #ffffff;
-  --border-radius: 8px;
-  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --transition: all 0.3s ease;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-  color: var(--dark-color);
-  background-color: var(--background-color);
-}
-
-.app-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-header {
-  background-color: var(--card-background);
-  box-shadow: var(--shadow);
-  padding: 1.5rem;
-  text-align: center;
-}
-
-.logo-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.emoji-logo {
-  font-size: 2.5rem;
-  line-height: 1;
-  filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.1));
-}
-
-.app-title {
-  font-size: 2.2rem;
-  color: var(--primary-color);
-  margin: 0;
-  font-weight: 600;
-  letter-spacing: -0.5px;
-  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.05);
-}
-
-.description {
-  color: #666;
-  font-size: 1.1rem;
-  font-weight: 400;
-  max-width: 600px;
-  margin: 0 auto;
-  margin-top: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.tv-icon {
-  font-size: 1.3rem;
-}
-
-main {
-  flex: 1;
-  padding: 2rem 1rem;
-}
-
-footer {
-  background-color: var(--dark-color);
-  color: var(--light-color);
-  text-align: center;
-  padding: 1.5rem;
-  margin-top: auto;
-  position: sticky;
-  bottom: 0;
-  width: 100%;
-  z-index: 10;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-}
-
-footer a {
-  color: var(--light-color);
-  text-decoration: none;
-  border-bottom: 1px dotted var(--light-color);
-  transition: var(--transition);
-}
-
-footer a:hover {
-  color: #3498db;
-  border-bottom-color: #3498db;
-}
-
-.footer-text {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: var(--border-radius);
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-  transition: var(--transition);
-}
-
-button:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-}
-
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-@media (max-width: 768px) {
-  .logo-container {
-    flex-direction: column;
-  }
-  
-  .app-title {
-    font-size: 1.8rem;
-  }
-  
-  .description {
-    font-size: 0.95rem;
-    padding: 0 15px;
-  }
-  
-  footer {
-    display: none;
-  }
-}
-</style>

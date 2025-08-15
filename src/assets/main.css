@@ -1,45 +1,25 @@
-@import './base.css';
+@import "tailwindcss";
 
-/* Global responsive styles */
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
-  height: 100%;
-  width: 100%;
-  overflow-x: hidden;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  #app {
-    padding: 1rem 2rem;
-  }
-}
-
-@media (max-width: 768px) {
-  #app {
-    padding: 1rem;
-  }
+@theme {
+  --color-deep-purple: #4A3B8C;
+  --color-bright-blue: #2E5BFF;
+  --color-warm-orange: #FF6B3D;
+  --color-soft-pink: #FF9EC7;
+  --color-medium-purple: #7B68EE;
+  --color-sky-blue: #5DADE2;
+  --color-peach-orange: #FFB366;
+  --color-light-pink: #F8C8DC;
+  --color-golden-yellow: #FFD700;
+  --color-pure-white: #FFFFFF;
+  --color-off-white: #F5F5F5;
+  --color-light-grey: #E8E8E8;
+  
+  /* Semantic aliases */
+  --color-primary: #2E5BFF;
+  --color-secondary: #5DADE2;
+  --color-accent: #FF6B3D;
+  --color-text: #4A3B8C;
+  --color-background: #FFFFFF;
+  --color-surface: #F5F5F5;
+  --color-border: #E8E8E8;
 }

@@ -1,14 +1,50 @@
-This backend wraps ElevenLabs dubbing api. The front-end is a new Vue app. The idea is that one person will record some audio and it will
-translate to the other language. I think we should have an application that is split one language on one side and one on the 
-  other. The result returns `expected_duration_sec` which can be used. 
-   We should start polling after that expected duration and show the 
-  status. When the dubbing is complete stream the audio using the API.
+# Speak Easier - Conversational Dubbing App
 
- This is the list of supported languages https://elevenlabs.io/docs/capabilities/dubbing#list-of-supported-languages-for-dubbing                    │
+## Overview
+This backend wraps ElevenLabs dubbing API. The front-end is a Vue 3 app with TypeScript and Tailwind CSS. The idea is that one person will record some audio and it will translate to the other language. The application is split with one language on one side and one on the other. The result returns `expected_duration_sec` which is used for polling timing.
 
-Okay, so now, after the dub is playable, I want to continue the conversation. So we'd keep the existing setup but then add a new component that    │
-│   does the translation the other direction. The idea here is that people are going to have a conversation in their native language. I suppose add    │
-│   it beneath and scroll. I also want to be able to use this app on a phone as well. 
+## Features
+- **Real-time Translation**: Record audio in source language, get dubbed audio in target language
+- **Conversation History**: Maintains a scrollable conversation history with alternating message layout
+- **Mobile Responsive**: Optimized for both desktop and mobile use
+- **Language Support**: Full support for ElevenLabs supported languages
+- **Transcript Integration**: Displays transcripts for dubbed audio in conversation history
+- **Modern UI**: Clean design using official color palette with Tailwind CSS
 
+## Technical Implementation
+- **Frontend**: Vue 3 + TypeScript + Tailwind CSS v4
+- **Backend**: Cloudflare Workers + Hono
+- **Styling**: Official color palette implemented via Tailwind @theme directive
+- **Audio**: Native HTML5 audio controls with streaming support
+- **Polling**: Smart polling system that waits for expected duration before checking status
+- **API Integration**: ElevenLabs dubbing and transcript APIs
 
-Okay I'd love to get the transcript for the recordings after it's dubbed to go in the conversation history. Here is the API I'd like to wrap from ElevenLabs: https://elevenlabs.io/docs/api-reference/dubbing/get-transcript-for-dub 
+## Supported Languages
+See the complete list: https://elevenlabs.io/docs/capabilities/dubbing#list-of-supported-languages-for-dubbing
+
+## Recent Updates
+- ✅ Migrated to Tailwind CSS v4 for better maintainability
+- ✅ Implemented official brand color palette
+- ✅ Enhanced conversation interface with better UX
+- ✅ Added transcript support using ElevenLabs transcript API
+- ✅ Improved mobile responsiveness
+- ✅ Added proper two-line footer layout
+
+## Color Palette
+**Primary Colors:**
+- Deep Purple: #4A3B8C
+- Bright Blue: #2E5BFF
+- Warm Orange: #FF6B3D
+- Soft Pink: #FF9EC7
+
+**Secondary Colors:**
+- Medium Purple: #7B68EE
+- Sky Blue: #5DADE2
+- Peach Orange: #FFB366
+- Light Pink: #F8C8DC
+
+**Accent Colors:**
+- Golden Yellow: #FFD700
+- Pure White: #FFFFFF
+- Off White: #F5F5F5
+- Light Grey: #E8E8E8 

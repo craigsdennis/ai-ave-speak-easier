@@ -360,22 +360,28 @@ function resetRecordingState() {
 </script>
 
 <template>
-  <div class="translation-container">
-    <div class="language-controls">
-      <div class="language-selector">
-        <label for="source-language">Source:</label>
-        <select id="source-language" v-model="sourceLanguage">
+  <div class="flex flex-col max-w-6xl mx-auto gap-5 w-full">
+    <!-- Language Controls -->
+    <div class="flex justify-center items-center gap-5 mb-5 flex-wrap">
+      <div class="flex items-center gap-2">
+        <label for="source-language" class="text-deep-purple font-medium">Source:</label>
+        <select id="source-language" v-model="sourceLanguage" 
+                class="p-2 rounded border border-light-grey focus:border-bright-blue focus:outline-none">
           <option v-for="lang in languageOptions" :key="lang.code" :value="lang.code">
             {{ lang.name }}
           </option>
         </select>
       </div>
       
-      <button class="swap-btn" @click="swapLanguages">↔️</button>
+      <button @click="swapLanguages" 
+              class="text-2xl border-none bg-transparent cursor-pointer hover:scale-110 transition-transform">
+        ↔️
+      </button>
       
-      <div class="language-selector">
-        <label for="target-language">Target:</label>
-        <select id="target-language" v-model="targetLanguage">
+      <div class="flex items-center gap-2">
+        <label for="target-language" class="text-deep-purple font-medium">Target:</label>
+        <select id="target-language" v-model="targetLanguage"
+                class="p-2 rounded border border-light-grey focus:border-bright-blue focus:outline-none">
           <option v-for="lang in languageOptions" :key="lang.code" :value="lang.code">
             {{ lang.name }}
           </option>
@@ -383,51 +389,67 @@ function resetRecordingState() {
       </div>
     </div>
     
-    <div class="translation-panels">
+    <!-- Translation Panels -->
+    <div class="flex gap-6 min-h-[400px] flex-col md:flex-row mb-8">
       <!-- Source Language Panel -->
-      <div class="panel source-panel">
-        <h2>{{ sourceLanguageName }}</h2>
+      <div class="flex-1 border border-light-grey rounded-xl p-6 flex flex-col shadow-lg bg-pure-white hover:-translate-y-1 hover:shadow-xl transition-all duration-200">
+        <h2 class="text-center text-2xl font-semibold text-bright-blue mt-0 pb-4 border-b-2 border-light-grey mb-5">
+          {{ sourceLanguageName }}
+        </h2>
         
-        <div class="panel-content">
-          <div class="recording-controls">
-            <div class="record-button-container">
+        <div class="flex flex-col flex-grow justify-center items-center gap-5">
+          <div class="flex flex-col items-center gap-2 w-full">
+            <div class="flex flex-col items-center gap-2">
               <button 
-                :class="['record-btn', isRecording ? 'recording' : '']" 
+                :class="[
+                  'px-8 py-4 rounded-full border-none font-bold cursor-pointer transition-all duration-300 text-base tracking-wider shadow-lg',
+                  isRecording 
+                    ? 'bg-warm-orange text-white animate-pulse' 
+                    : 'bg-bright-blue text-white hover:shadow-xl hover:-translate-y-1'
+                ]"
                 @click="isRecording ? stopRecording() : startRecording()">
                 {{ isRecording ? 'Stop Recording' : 'Start Recording' }}
               </button>
-              <div v-if="isRecording" class="recording-indicator">
-                <span class="recording-dot"></span>
+              
+              <div v-if="isRecording" class="flex items-center gap-2 text-warm-orange font-medium">
+                <span class="inline-block w-2.5 h-2.5 bg-warm-orange rounded-full animate-pulse"></span>
                 Recording...
               </div>
             </div>
-            <div class="status">{{ recordingStatus }}</div>
+            <div class="text-center italic text-deep-purple text-sm max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
+              {{ recordingStatus }}
+            </div>
           </div>
           
-          <audio v-if="sourceAudioUrl" :src="sourceAudioUrl" controls></audio>
+          <audio v-if="sourceAudioUrl" :src="sourceAudioUrl" controls class="w-full"></audio>
           
           <button 
-            class="translate-btn" 
             @click="uploadAndTranslate" 
-            :disabled="!audioBlob || isRecording">
+            :disabled="!audioBlob || isRecording"
+            class="px-6 py-3 rounded-lg border-none bg-sky-blue text-white font-bold cursor-pointer shadow-lg text-sm tracking-wide transition-all duration-300 hover:-translate-y-1 hover:shadow-xl disabled:bg-light-grey disabled:cursor-not-allowed disabled:transform-none">
             Translate to {{ targetLanguageName }}
           </button>
         </div>
       </div>
       
       <!-- Target Language Panel -->
-      <div class="panel target-panel">
-        <h2>{{ targetLanguageName }}</h2>
+      <div class="flex-1 border border-light-grey rounded-xl p-6 flex flex-col shadow-lg bg-pure-white hover:-translate-y-1 hover:shadow-xl transition-all duration-200">
+        <h2 class="text-center text-2xl font-semibold text-bright-blue mt-0 pb-4 border-b-2 border-light-grey mb-5">
+          {{ targetLanguageName }}
+        </h2>
         
-        <div class="panel-content">
-          <div class="translation-status">{{ translationStatus }}</div>
+        <div class="flex flex-col flex-grow justify-center items-center gap-5">
+          <div class="text-center italic text-deep-purple text-sm max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
+            {{ translationStatus }}
+          </div>
           
-          <audio v-if="targetAudioUrl" :src="targetAudioUrl" controls autoplay></audio>
+          <audio v-if="targetAudioUrl" :src="targetAudioUrl" controls autoplay class="w-full"></audio>
           
           <button 
             v-if="targetAudioUrl" 
-            class="download-btn"
-            @click="downloadTranslatedAudio">
+            @click="downloadTranslatedAudio"
+            class="px-6 py-3 rounded-lg border-none bg-bright-blue text-white font-bold cursor-pointer mt-2 shadow-lg text-sm transition-all duration-300 flex items-center justify-center gap-2 hover:-translate-y-1 hover:shadow-xl">
+            <span>⬇️</span>
             Download Audio
           </button>
         </div>
@@ -436,244 +458,3 @@ function resetRecordingState() {
   </div>
 </template>
 
-<style scoped>
-.translation-container {
-  display: flex;
-  flex-direction: column;
-  max-width: 1200px;
-  margin: 0 auto;
-  gap: 20px;
-  width: 100%;
-}
-
-.language-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 20px;
-  flex-wrap: wrap; /* Allows wrapping on small screens */
-}
-
-.language-selector {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.language-selector select {
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-.swap-btn {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.translation-panels {
-  display: flex;
-  gap: 25px;
-  height: auto; 
-  min-height: 400px;
-  flex-direction: row; 
-  margin-bottom: 30px;
-}
-
-.panel {
-  flex: 1;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 25px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  background-color: white;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.panel:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-}
-
-.panel h2 {
-  text-align: center;
-  margin-top: 0;
-  padding-bottom: 15px;
-  border-bottom: 2px solid #eee;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--primary-color);
-}
-
-.panel-content {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-}
-
-.recording-controls {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-}
-
-.record-button-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.record-btn {
-  padding: 15px 32px;
-  border-radius: 50px;
-  border: none;
-  background-color: #3498db;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
-  font-size: 1rem;
-  letter-spacing: 0.5px;
-}
-
-.record-btn.recording {
-  background-color: #e74c3c;
-  animation: pulse 1.5s infinite;
-}
-
-.recording-indicator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #e74c3c;
-  font-weight: 500;
-}
-
-.recording-dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  background-color: #e74c3c;
-  border-radius: 50%;
-  animation: blink 1s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes blink {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.3;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.translate-btn {
-  padding: 12px 24px;
-  border-radius: 8px;
-  border: none;
-  background-color: #2ecc71;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
-  font-size: 0.95rem;
-  letter-spacing: 0.3px;
-  transition: all 0.3s;
-}
-
-.translate-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(46, 204, 113, 0.5);
-}
-
-.translate-btn:disabled {
-  background-color: #95a5a6;
-  cursor: not-allowed;
-}
-
-.download-btn {
-  padding: 12px 24px;
-  border-radius: 8px;
-  border: none;
-  background-color: #3498db;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
-  font-size: 0.95rem;
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.download-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(52, 152, 219, 0.5);
-}
-
-.download-btn:before {
-  content: "⬇️";
-  font-size: 1.1rem;
-}
-
-.status, .translation-status {
-  text-align: center;
-  font-style: italic;
-  color: #7f8c8d;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-audio {
-  width: 100%;
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .translation-panels {
-    flex-direction: column;
-  }
-  
-  .panel {
-    width: 100%;
-  }
-  
-  .language-controls {
-    padding: 0 10px;
-  }
-}
-
-</style>

@@ -168,46 +168,51 @@ function getLanguageName(langCode: string): string {
 </script>
 
 <template>
-  <div class="conversation-wrapper">
+  <div class="flex flex-col max-w-6xl mx-auto gap-5 h-full">
     <!-- Main translation interface -->
     <TranslationInterface ref="translationInterface" @translation-complete="addTranslation" />
     
-    
     <!-- Conversation history -->
-    <div class="conversation-container" ref="conversationContainer">
-      <div v-if="conversations.length === 0" class="empty-state">
+    <div class="border border-light-grey rounded-xl p-6 h-96 overflow-y-auto flex flex-col gap-5 shadow-lg bg-pure-white mb-5" ref="conversationContainer">
+      <div v-if="conversations.length === 0" class="flex justify-center items-center h-full text-medium-purple italic">
         Your conversation will appear here
       </div>
       
-      <div v-for="(item, index) in conversations" :key="item.id" :class="['conversation-item', index % 2 === 0 ? 'left' : 'right']">
-        <div class="conversation-header">
-          <div class="language-badge">
+      <div v-for="(item, index) in conversations" :key="item.id" 
+           :class="[
+             'p-4 rounded-xl shadow-md transition-all duration-200 w-4/5 hover:-translate-y-1 hover:shadow-lg',
+             index % 2 === 0 
+               ? 'bg-off-white self-start border-l-4 border-bright-blue' 
+               : 'bg-off-white self-end border-r-4 border-sky-blue'
+           ]">
+        
+        <div class="flex justify-between items-center mb-2">
+          <div class="bg-bright-blue text-white px-2 py-1 rounded-full text-sm font-medium shadow-sm">
             {{ getLanguageName(item.sourceLanguage) }} → {{ getLanguageName(item.targetLanguage) }}
           </div>
-          <div class="timestamp">
+          <div class="text-xs text-medium-purple">
             {{ new Date(item.timestamp).toLocaleTimeString() }}
           </div>
         </div>
         
-        <div class="audio-players">
-          <div class="source-audio">
-            <div class="audio-label">Original</div>
-            <audio :src="item.sourceAudioUrl" controls></audio>
+        <div class="flex flex-col gap-2">
+          <div class="flex flex-col gap-1">
+            <div class="text-xs font-medium text-deep-purple">Original</div>
+            <audio :src="item.sourceAudioUrl" controls class="w-full"></audio>
           </div>
           
-          <div class="target-audio">
-            <div class="audio-label">Translated</div>
-            <audio 
-              :src="item.targetAudioUrl" 
-              controls
-            ></audio>
+          <div class="flex flex-col gap-1">
+            <div class="text-xs font-medium text-deep-purple">Translated</div>
+            <audio :src="item.targetAudioUrl" controls class="w-full"></audio>
           </div>
         </div>
         
-        <div v-if="item.targetTranscript" class="transcript-container">
-          <div class="transcript target-transcript">
-            <div class="transcript-header">Transcript</div>
-            <div class="transcript-content">{{ formatTranscript(item.targetTranscript) }}</div>
+        <div v-if="item.targetTranscript" class="mt-3">
+          <div class="bg-off-white rounded p-2 border-l-4 border-sky-blue">
+            <div class="font-medium text-sm mb-1 text-deep-purple">Transcript</div>
+            <div class="text-sm leading-relaxed whitespace-pre-wrap text-deep-purple">
+              {{ formatTranscript(item.targetTranscript) }}
+            </div>
           </div>
         </div>
       </div>
@@ -215,156 +220,3 @@ function getLanguageName(langCode: string): string {
   </div>
 </template>
 
-<style scoped>
-.conversation-wrapper {
-  display: flex;
-  flex-direction: column;
-  max-width: 1200px;
-  margin: 0 auto;
-  gap: 20px;
-  height: 100%;
-}
-
-
-.conversation-container {
-  border: 1px solid #eee;
-  border-radius: 12px;
-  padding: 25px;
-  height: 450px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  background-color: #fcfcfc;
-  margin-bottom: 20px;
-}
-
-.empty-state {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  color: #999;
-  font-style: italic;
-}
-
-.conversation-item {
-  padding: 18px;
-  border-radius: 12px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  width: 80%;
-}
-
-.conversation-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
-}
-
-.conversation-item.left {
-  background-color: #f0f7ff;
-  align-self: flex-start;
-  border-left: 4px solid var(--primary-color);
-}
-
-.conversation-item.right {
-  background-color: #f8f9fa;
-  align-self: flex-end;
-  border-right: 4px solid var(--secondary-color);
-}
-
-.conversation-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.language-badge {
-  background-color: #3498db;
-  color: white;
-  padding: 6px 10px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.timestamp {
-  font-size: 0.8rem;
-  color: #777;
-}
-
-.audio-players {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.source-audio, .target-audio {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.audio-label {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #555;
-}
-
-audio {
-  width: 100%;
-}
-
-.transcript-container {
-  margin-top: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.transcript {
-  background-color: #f8f9fa;
-  border-radius: 4px;
-  padding: 10px;
-  border-left: 3px solid #3498db;
-}
-
-.target-transcript {
-  border-left-color: #2ecc71;
-}
-
-.transcript-header {
-  font-weight: 500;
-  font-size: 0.9rem;
-  margin-bottom: 6px;
-  color: #555;
-}
-
-.transcript-content {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  color: #333;
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .conversation-item.left,
-  .conversation-item.right {
-    margin-left: 0;
-    margin-right: 0;
-    width: 100%;
-  }
-  
-  .conversation-container {
-    height: 350px;
-  }
-  
-  .transcript-container {
-    margin-top: 10px;
-  }
-}
-</style>
