@@ -11,7 +11,7 @@ import { RouterView } from 'vue-router'
         <span class="text-4xl drop-shadow-sm">🔊</span>
       </div>
       <div class="text-medium-purple text-lg font-normal max-w-2xl mx-auto mt-2 flex items-center justify-center flex-wrap gap-2">
-        <span class="text-xl">📺</span> As seen on the hit show AI Avenue <span class="text-xl">📺</span>
+        <span class="text-xl">📺</span> As seen on <a href="https://aiavenue.show">AI Avenue</a><span class="text-xl">📺</span>
       </div>
     </header>
 
@@ -28,7 +28,7 @@ import { RouterView } from 'vue-router'
           <a href="https://vuejs.org/" target="_blank" rel="noopener" class="text-off-white border-b border-dotted border-off-white hover:text-bright-blue hover:border-bright-blue transition-colors">Vue</a>
         </div>
         <div class="flex items-center justify-center flex-wrap gap-2">
-          <a href="https://github.com/craigsdennis/" target="_blank" rel="noopener" class="text-off-white border-b border-dotted border-off-white hover:text-bright-blue hover:border-bright-blue transition-colors">👀 the code</a>
+          <a href="https://github.com/craigsdennis/ai-ave-speak-easier" target="_blank" rel="noopener" class="text-off-white border-b border-dotted border-off-white hover:text-bright-blue hover:border-bright-blue transition-colors">👀 the code</a>
         </div>
       </div>
     </footer>
