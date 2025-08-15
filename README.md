@@ -1,33 +1,22 @@
-# conversational-dub
+# Speak Easier
 
-This template should help get you started developing with Vue 3 in Vite.
+This is the translation app used in [Episode 1](https://aiavenue.show) of [AI Avenue](https://aiavenue.show).
 
-## Recommended IDE Setup
+It uses [ElevenLabs Dubbing API](https://elevenlabs.io/docs/capabilities/dubbing)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Develop
 
-## Type Support for `.vue` Imports in TS
+Copy [.dev.vars.example](./.dev.vars.example) to `.dev.vars`
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## Deploy
 
-```sh
-npm run build
+Remove the custom routes in [wrangler.jsonc](./wrangler.jsonc)
+
+```bash
+npm run deploy
 ```
+
