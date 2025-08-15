@@ -23,12 +23,12 @@ import { RouterView } from 'vue-router'
       <div class="flex flex-col items-center justify-center gap-2">
         <div class="flex items-center justify-center flex-wrap gap-2">
           Built with 🧡 using 
-          <a href="https://workers.cloudflare.com/" target="_blank" rel="noopener" class="text-off-white border-b border-dotted border-off-white hover:text-bright-blue hover:border-bright-blue transition-colors">Cloudflare Workers</a> &amp;&amp; 
+          <a href="https://developers.cloudflare.com/" target="_blank" rel="noopener" class="text-off-white border-b border-dotted border-off-white hover:text-bright-blue hover:border-bright-blue transition-colors">Cloudflare Workers</a> &amp;&amp; 
           <a href="https://elevenlabs.io/" target="_blank" rel="noopener" class="text-off-white border-b border-dotted border-off-white hover:text-bright-blue hover:border-bright-blue transition-colors">ElevenLabs</a> &amp;&amp; 
           <a href="https://vuejs.org/" target="_blank" rel="noopener" class="text-off-white border-b border-dotted border-off-white hover:text-bright-blue hover:border-bright-blue transition-colors">Vue</a>
         </div>
         <div class="flex items-center justify-center flex-wrap gap-2">
-          <a href="https://github.com/cloudflare/ai-avenue" target="_blank" rel="noopener" class="text-off-white border-b border-dotted border-off-white hover:text-bright-blue hover:border-bright-blue transition-colors">👀 the code</a>
+          <a href="https://github.com/craigsdennis/" target="_blank" rel="noopener" class="text-off-white border-b border-dotted border-off-white hover:text-bright-blue hover:border-bright-blue transition-colors">👀 the code</a>
         </div>
       </div>
     </footer>
