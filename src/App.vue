@@ -11,7 +11,9 @@ import { RouterView } from 'vue-router'
         <span class="text-4xl drop-shadow-sm">🔊</span>
       </div>
       <div class="text-medium-purple text-lg font-normal max-w-2xl mx-auto mt-2 flex items-center justify-center flex-wrap gap-2">
-        <span class="text-xl">📺</span> As seen on <a href="https://aiavenue.show">AI Avenue</a><span class="text-xl">📺</span>
+        <span class="text-xl">📺</span> As seen on <a href="https://aiavenue.show" class="inline-flex items-center">
+          <img src="/src/assets/ai-avenue-logo.svg" alt="AI Avenue" class="h-18 w-auto">
+        </a>
       </div>
     </header>
 
