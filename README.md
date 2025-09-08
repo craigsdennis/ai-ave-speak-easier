@@ -4,6 +4,9 @@
 
 This is the translation app used in [Episode 1: Voice](https://aiavenue.show) of [AI Avenue](https://aiavenue.show).
 
+
+[<img src="https://img.youtube.com/vi/x8GZMwSq5bY/0.jpg">](https://youtu.be/x8GZMwSq5bY "Make an AI Wrapper")
+
 It uses [ElevenLabs Dubbing API](https://elevenlabs.io/docs/capabilities/dubbing)
 
 ## Develop
