@@ -4,6 +4,8 @@
 
 This is the translation app used in [Episode 1: Voice](https://aiavenue.show) of [AI Avenue](https://aiavenue.show).
 
+Take [Speak Easier](https://speak-easier.aiavenue.show) for a spin.
+
 
 [<img src="https://img.youtube.com/vi/x8GZMwSq5bY/0.jpg">](https://youtu.be/x8GZMwSq5bY "Make an AI Wrapper")
 
